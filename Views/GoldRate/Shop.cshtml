@@ -1,0 +1,131 @@
+@model GoldPriceDashboard.Models.GoldDashboardViewModel
+@{
+    Layout = null;
+    var shopKey = (string)ViewBag.ShopKey;
+    var shopName = (string)ViewBag.ShopName;
+    var sourceUrl = (string)ViewBag.SourceUrl;
+    decimal? rate916 = null;
+    decimal? rate999 = null;
+    DateTime? updated = null;
+    string status = "Unavailable";
+    string errorMessage = null;
+    string movement916 = null;
+    string movement999 = null;
+    switch (shopKey)
+    {
+        case "malabar":
+            rate916 = Model.MalabarRate916; rate999 = Model.MalabarRate999; updated = Model.MalabarUpdated; status = Model.MalabarStatus; errorMessage = Model.MalabarErrorMessage; movement916 = Model.MalabarMovement916; movement999 = Model.MalabarMovement999;
+            break;
+        case "mustafa":
+            rate916 = Model.MustafaRate916; rate999 = Model.MustafaRate999; updated = Model.MustafaUpdated; status = Model.MustafaStatus; errorMessage = Model.MustafaErrorMessage; movement916 = Model.MustafaMovement916; movement999 = Model.MustafaMovement999;
+            break;
+        case "grt":
+            rate916 = Model.GRTGoldRate916; rate999 = Model.GRTGoldRate999; updated = Model.GRTGoldUpdated; status = Model.GRTGoldStatus; errorMessage = Model.GRTGoldErrorMessage; movement916 = Model.GRTGoldMovement916; movement999 = Model.GRTGoldMovement999;
+            break;
+        case "joyalukkas":
+            rate916 = Model.JoyalukkasRate916; rate999 = Model.JoyalukkasRate999; updated = Model.JoyalukkasUpdated; status = Model.JoyalukkasStatus; errorMessage = Model.JoyalukkasErrorMessage; movement916 = Model.JoyalukkasMovement916; movement999 = Model.JoyalukkasMovement999;
+            break;
+    }
+    var rate916Value = rate916 ?? 0;
+    var rate999Value = rate999 ?? 0;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@shopName Indicative Gold Rates | Singapore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/gold-dashboard.css?v=20260927-2")" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid py-3 dashboard-shell">
+        <nav class="navbar navbar-expand-lg dashboard-nav mb-4" aria-label="Main navigation">
+            <a class="navbar-brand" href="@Url.Action("Index", "GoldRate")">SG Gold Rates</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="@Url.Action("Index", "GoldRate")">Dashboard</a>
+                    <a class="nav-link" href="@Url.Action("Index", "GoldRate")#gold-rates">Gold Rates</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "malabar" })">Malabar</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "mustafa" })">Mustafa</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "grt" })">GRT</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "joyalukkas" })">Joyalukkas</a>
+                    <a class="nav-link" href="@Url.Action("Index", "GoldRate")#comparison">Compare Prices</a>
+                    <a class="nav-link" href="@Url.Action("Index", "GoldRate")#history">Gold Price History</a>
+                    <a class="nav-link" href="@Url.Action("Index", "GoldRate")#currency-converter">Currency Converter</a>
+                    <a class="nav-link" href="@Url.Action("About", "GoldRate")">About Us</a>
+                </div>
+            </div>
+        </nav>
+
+        <header class="page-heading mb-4">
+            <div>
+                <a class="back-link" href="@Url.Action("Index", "GoldRate")"><i class="fas fa-arrow-left me-2"></i>Back to shop comparison</a>
+                <p class="eyebrow mt-3 mb-1">SINGAPORE | SGD PER GRAM | INDICATIVE PRICE</p>
+                <h1>@shopName Gold Rates</h1>
+            </div>
+            <span class="source-status @(status == "Available" ? "is-available" : status == "Last available rate" ? "is-stale" : "is-unavailable")">@status</span>
+        </header>
+
+        <section class="row g-3 mb-4" aria-label="Current indicative prices">
+            <div class="col-md-6">
+                <div class="detail-rate-panel">
+                    <div><span class="purity-label">22K / 916</span><div class="detail-rate">@(rate916.HasValue ? "S$" + rate916Value.ToString("F2") : "Not available")</div><span class="rate-label">Indicative price per gram | SGD</span></div>
+                    @if (!string.IsNullOrEmpty(movement916)) { <div class="movement-indicator">@movement916</div> }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-rate-panel">
+                    <div><span class="purity-label">24K / 999</span><div class="detail-rate">@(rate999.HasValue ? "S$" + rate999Value.ToString("F2") : "Not available")</div><span class="rate-label">Indicative price per gram | SGD</span></div>
+                    @if (!string.IsNullOrEmpty(movement999)) { <div class="movement-indicator">@movement999</div> }
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-meta mb-4">
+            <div><span class="meta-label">@ViewBag.TimestampLabel</span><strong>@(updated.HasValue ? updated.Value.ToString("dd MMM yyyy, HH:mm:ss") : "Unavailable")</strong></div>
+            <div><span class="meta-label">Rate source</span>@if (!string.IsNullOrWhiteSpace(sourceUrl)) { <a href="@sourceUrl" target="_blank" rel="noopener noreferrer">Visit @shopName source <i class="fas fa-arrow-up-right-from-square ms-1"></i></a> } else { <span>Source URL not configured</span> }</div>
+            <div><span class="meta-label">GST treatment</span><span>As published by the shop; not independently verified</span></div>
+        </section>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage)) { <p class="alert alert-warning">@errorMessage</p> }
+
+        <section class="content-section mb-4" id="history">
+            <div class="section-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div><p class="eyebrow mb-1">EXCEL-BACKED OBSERVATIONS</p><h2>Price history</h2><p class="text-muted mb-0">Only rates actually recorded for this shop are plotted.</p></div>
+                <div class="period-control" role="group" aria-label="History period">
+                    <button type="button" class="period-button active" data-filter="7">7 days</button>
+                    <button type="button" class="period-button" data-filter="30">1 month</button>
+                    <button type="button" class="period-button" data-filter="90">3 months</button>
+                    <button type="button" class="period-button" data-filter="180">6 months</button>
+                    <button type="button" class="period-button" data-filter="365">1 year</button>
+                </div>
+            </div>
+            <div class="chart-frame mt-3"><canvas id="shopHistoryChart" aria-label="Historical 22K and 24K prices"></canvas></div>
+            <p id="historyEmpty" class="empty-state" hidden>No recorded prices for this shop in the selected period.</p>
+        </section>
+
+        <section class="content-section mb-4" id="currency-converter">
+            <div class="section-heading"><p class="eyebrow mb-1">REFERENCE ONLY</p><h2>Currency converter</h2></div>
+            <div class="converter-bar mt-3"><label for="currencySelect">Display equivalent in</label><select id="currencySelect" class="form-select"><option value="SGD">SGD | Singapore Dollar</option><option value="INR">INR | Indian Rupee</option><option value="USD">USD | US Dollar</option><option value="MYR">MYR | Malaysian Ringgit</option><option value="AED">AED | UAE Dirham</option><option value="GBP">GBP | British Pound</option><option value="EUR">EUR | Euro</option></select><span id="conversionStatus" class="small text-muted">Fetching reference exchange rate...</span></div>
+            <div class="converted-detail mt-3"><span>22K / 916 <strong id="converted916">-</strong></span><span>24K / 999 <strong id="converted999">-</strong></span></div>
+            <p class="conversion-note mt-2 mb-0">Converted values are estimates using an external reference exchange rate, not shop quotations. <span id="fxTimestamp"></span></p>
+        </section>
+
+        <aside class="price-disclaimer mb-4"><strong>Indicative prices only</strong><p class="mb-0">Gold prices shown are extracted/referenced from the respective jewellery shop websites and are for information and comparison purposes only. Prices may change frequently and may vary from the actual in-store price due to market movements, timing of updates, product/design differences, workmanship and other applicable charges. Please confirm the final price directly with the respective jewellery shop before making a purchase.</p></aside>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        window.shopDetail = {
+            source: '@shopName',
+            historyUrl: '@Html.Raw(ViewBag.ShopHistoryUrl)',
+            rate916: @(rate916.HasValue ? rate916Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null"),
+            rate999: @(rate999.HasValue ? rate999Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null")
+        };
+    </script>
+    <script src="@Url.Content("~/Scripts/shop-detail.js?v=20260927-5")"></script>
+</body>
+</html>
