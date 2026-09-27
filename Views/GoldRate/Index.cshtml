@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @using Newtonsoft.Json
 @model GoldPriceDashboard.Models.GoldDashboardViewModel
 @{
@@ -381,3 +382,388 @@
     <script src="@Url.Content("~/Scripts/gold-dashboard.js?v=20260927-4")"></script>
 </body>
 </html>
+=======
+@using Newtonsoft.Json
+@model GoldPriceDashboard.Models.GoldDashboardViewModel
+@{
+    Layout = null;
+    var now = DateTime.Now;
+    var mustafa916 = Model.MustafaRate916 ?? 0;
+    var mustafa999 = Model.MustafaRate999 ?? 0;
+    var malabar916 = Model.MalabarRate916 ?? 0;
+    var malabar999 = Model.MalabarRate999 ?? 0;
+    var grt916 = Model.GRTGoldRate916 ?? 0;
+    var grt999 = Model.GRTGoldRate999 ?? 0;
+    var joyalukkas916 = Model.JoyalukkasRate916 ?? 0;
+    var joyalukkas999 = Model.JoyalukkasRate999 ?? 0;
+    var diff916 = Model.Difference916 ?? 0;
+    var diff999 = Model.Difference999 ?? 0;
+    var sourceUrls = System.Configuration.ConfigurationManager.AppSettings;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gold Price Rate Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/gold-dashboard.css?v=20260927-2")" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid py-3 dashboard-shell">
+        <nav class="navbar navbar-expand-lg dashboard-nav mb-4" aria-label="Main navigation">
+            <a class="navbar-brand" href="@Url.Action("Index", "GoldRate")">SG Gold Rates</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link active" href="@Url.Action("Index", "GoldRate")">Dashboard</a>
+                    <a class="nav-link" href="#gold-rates">Gold Rates</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "malabar" })">Malabar</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "mustafa" })">Mustafa</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "grt" })">GRT</a>
+                    <a class="nav-link" href="@Url.Action("Shop", "GoldRate", new { id = "joyalukkas" })">Joyalukkas</a>
+                    <a class="nav-link" href="#comparison">Compare Prices</a>
+                    <a class="nav-link" href="#history">Gold Price History</a>
+                    <a class="nav-link" href="#currency-converter">Currency Converter</a>
+                    <a class="nav-link" href="@Url.Action("About", "GoldRate")">About Us</a>
+                </div>
+            </div>
+        </nav>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <p class="eyebrow mb-1">SINGAPORE | INDICATIVE PRICES</p>
+                        <h1 class="h3 mb-0"><i class="fas fa-coins text-warning me-2"></i>Today's Gold Prices</h1>
+                        <p class="text-muted mb-0">Compare published 22K and 24K rates | SGD per gram</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <span class="text-muted" id="currentDateTime">@now.ToString("dd-MMM-yyyy HH:mm:ss")</span>
+                        <span class="badge bg-info" id="lastRefreshBadge">Last Refresh: @(Model.LastRefresh.HasValue ? Model.LastRefresh.Value.ToString("dd-MMM-yyyy HH:mm:ss") : "Never")</span>
+                        <button class="btn btn-warning btn-sm" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4" id="gold-rates">
+            <div class="col-xl-3 col-md-6">
+                <div class="card source-card mustafa-card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><a class="shop-title-link" href="@Url.Action("Shop", "GoldRate", new { id = "mustafa" })"><i class="fas fa-gem me-2"></i>MUSTAFA JEWELLERY</a></h5>
+                        <span class="source-status @(Model.MustafaStatus == "Available" ? "is-available" : Model.MustafaStatus == "Last available rate" ? "is-stale" : "is-unavailable")">@Model.MustafaStatus</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">22K / 916</h6>
+                                    <div class="rate-value">@(mustafa916 > 0 ? "S$" + mustafa916.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 916 SGD/g</div>
+                                    <div class="converted-rate" data-shop="mustafa" data-purity="916"></div>
+                                    @if (Model.MustafaMovement916 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.MustafaMovement916.Contains("▲") ? "text-success" : Model.MustafaMovement916.Contains("▼") ? "text-danger" : "text-muted")">
+                                            @Model.MustafaMovement916
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">24K / 999</h6>
+                                    <div class="rate-value">@(mustafa999 > 0 ? "S$" + mustafa999.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 999 SGD/g</div>
+                                    <div class="converted-rate" data-shop="mustafa" data-purity="999"></div>
+                                    @if (Model.MustafaMovement999 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.MustafaMovement999.Contains("▲") ? "text-success" : Model.MustafaMovement999.Contains("▼") ? "text-danger" : "text-muted")">
+                                            @Model.MustafaMovement999
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.MustafaErrorMessage))
+                        {
+                            <div class="alert alert-warning mt-2 mb-0 py-1 small">@Model.MustafaErrorMessage</div>
+                        }
+                        <div class="mt-2 small text-muted">
+                            <i class="fas fa-clock me-1"></i>Last Updated: @(Model.MustafaUpdated.HasValue ? Model.MustafaUpdated.Value.ToString("dd-MMM-yyyy HH:mm") : "N/A")
+                        </div>
+                        <a class="source-link" href="@sourceUrls["MustafaGoldUrl"]" target="_blank" rel="noopener noreferrer">Source website <i class="fas fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card source-card malabar-card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><a class="shop-title-link" href="@Url.Action("Shop", "GoldRate", new { id = "malabar" })"><i class="fas fa-crown me-2"></i>MALABAR GOLD & DIAMONDS</a></h5>
+                        <span class="source-status @(Model.MalabarStatus == "Available" ? "is-available" : Model.MalabarStatus == "Last available rate" ? "is-stale" : "is-unavailable")">@Model.MalabarStatus</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">22K / 916</h6>
+                                    <div class="rate-value">@(malabar916 > 0 ? "S$" + malabar916.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 916 SGD/g</div>
+                                    <div class="converted-rate" data-shop="malabar" data-purity="916"></div>
+                                    @if (Model.MalabarMovement916 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.MalabarMovement916.Contains("▲") ? "text-success" : Model.MalabarMovement916.Contains("▼") ? "text-danger" : "text-muted")">
+                                            @Model.MalabarMovement916
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">24K / 999</h6>
+                                    <div class="rate-value">@(malabar999 > 0 ? "S$" + malabar999.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 999 SGD/g</div>
+                                    <div class="converted-rate" data-shop="malabar" data-purity="999"></div>
+                                    @if (Model.MalabarMovement999 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.MalabarMovement999.Contains("▲") ? "text-success" : Model.MalabarMovement999.Contains("▼") ? "text-danger" : "text-muted")">
+                                            @Model.MalabarMovement999
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.MalabarErrorMessage))
+                        {
+                            <div class="alert alert-warning mt-2 mb-0 py-1 small">@Model.MalabarErrorMessage</div>
+                        }
+                        <div class="mt-2 small text-muted">
+                            <i class="fas fa-clock me-1"></i>Last Updated: @(Model.MalabarUpdated.HasValue ? Model.MalabarUpdated.Value.ToString("dd-MMM-yyyy HH:mm") : "N/A")
+                        </div>
+                        <a class="source-link" href="@sourceUrls["MalabarGoldUrl"]" target="_blank" rel="noopener noreferrer">Source website <i class="fas fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card source-card grt-card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><a class="shop-title-link" href="@Url.Action("Shop", "GoldRate", new { id = "grt" })"><i class="fas fa-coins me-2"></i>GRT JEWELLERS</a></h5>
+                        <span class="source-status @(Model.GRTGoldStatus == "Available" ? "is-available" : Model.GRTGoldStatus == "Last available rate" ? "is-stale" : "is-unavailable")">@Model.GRTGoldStatus</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">22K / 916</h6>
+                                    <div class="rate-value">@(grt916 > 0 ? "S$" + grt916.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 916 SGD/g</div>
+                                    <div class="converted-rate" data-shop="grt" data-purity="916"></div>
+                                    @if (Model.GRTGoldMovement916 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.GRTGoldMovement916.Contains("▲") ? "text-success" : Model.GRTGoldMovement916.Contains("▼") ? "text-danger" : "text-muted")">@Model.GRTGoldMovement916</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">24K / 999</h6>
+                                    <div class="rate-value">@(grt999 > 0 ? "S$" + grt999.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 999 SGD/g</div>
+                                    <div class="converted-rate" data-shop="grt" data-purity="999"></div>
+                                    @if (Model.GRTGoldMovement999 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.GRTGoldMovement999.Contains("▲") ? "text-success" : Model.GRTGoldMovement999.Contains("▼") ? "text-danger" : "text-muted")">@Model.GRTGoldMovement999</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.GRTGoldErrorMessage))
+                        {
+                            <div class="alert alert-warning mt-2 mb-0 py-1 small">@Model.GRTGoldErrorMessage</div>
+                        }
+                        <div class="mt-2 small text-muted">
+                            <i class="fas fa-clock me-1"></i>Fetched: @(Model.GRTGoldUpdated.HasValue ? Model.GRTGoldUpdated.Value.ToString("dd-MMM-yyyy HH:mm") : "N/A")
+                        </div>
+                        <a class="source-link" href="@sourceUrls["GRTGoldUrl"]" target="_blank" rel="noopener noreferrer">Source website <i class="fas fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card source-card joyalukkas-card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><a class="shop-title-link" href="@Url.Action("Shop", "GoldRate", new { id = "joyalukkas" })"><i class="fas fa-gem me-2"></i>JOYALUKKAS</a></h5>
+                        <span class="source-status @(Model.JoyalukkasStatus == "Available" ? "is-available" : Model.JoyalukkasStatus == "Last available rate" ? "is-stale" : "is-unavailable")">@Model.JoyalukkasStatus</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">22K / 916</h6>
+                                    <div class="rate-value">@(joyalukkas916 > 0 ? "S$" + joyalukkas916.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 916 SGD/g</div>
+                                    <div class="converted-rate" data-shop="joyalukkas" data-purity="916"></div>
+                                    @if (Model.JoyalukkasMovement916 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.JoyalukkasMovement916.Contains("▲") ? "text-success" : Model.JoyalukkasMovement916.Contains("▼") ? "text-danger" : "text-muted")">@Model.JoyalukkasMovement916</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="rate-card">
+                                    <h6 class="text-uppercase text-muted">24K / 999</h6>
+                                    <div class="rate-value">@(joyalukkas999 > 0 ? "S$" + joyalukkas999.ToString("F2") : "---")</div>
+                                    <div class="rate-label">Indicative | 999 SGD/g</div>
+                                    <div class="converted-rate" data-shop="joyalukkas" data-purity="999"></div>
+                                    @if (Model.JoyalukkasMovement999 != null)
+                                    {
+                                        <div class="movement-indicator @(Model.JoyalukkasMovement999.Contains("▲") ? "text-success" : Model.JoyalukkasMovement999.Contains("▼") ? "text-danger" : "text-muted")">@Model.JoyalukkasMovement999</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.JoyalukkasErrorMessage))
+                        {
+                            <div class="alert alert-warning mt-2 mb-0 py-1 small">@Model.JoyalukkasErrorMessage</div>
+                        }
+                        <div class="mt-2 small text-muted">
+                            <i class="fas fa-clock me-1"></i>Last Updated: @(Model.JoyalukkasUpdated.HasValue ? Model.JoyalukkasUpdated.Value.ToString("dd-MMM-yyyy HH:mm") : "N/A")
+                        </div>
+                        <a class="source-link" href="https://www.joyalukkas.com/sg/goldrate" target="_blank" rel="noopener noreferrer">Source website <i class="fas fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" id="comparison">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-balance-scale me-2"></i>PUBLISHED PRICE COMPARISON</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Gold Purity</th>
+                                        <th class="text-end">Mustafa (SGD/gram)</th>
+                                        <th class="text-end">Malabar (SGD/gram)</th>
+                                        <th class="text-end">GRT Jewellers (SGD/gram)</th>
+                                        <th class="text-end">Joyalukkas (SGD/gram)</th>
+                                        <th class="text-end">Rate spread</th>
+                                        <th>Highest published</th>
+                                        <th>Lowest published</th>
+                                        <th class="text-end">Spread vs. low</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>22K / 916</strong></td>
+                                        <td class="text-end">S$@(mustafa916 > 0 ? mustafa916.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(malabar916 > 0 ? malabar916.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(grt916 > 0 ? grt916.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(joyalukkas916 > 0 ? joyalukkas916.ToString("F2") : "---")</td>
+                                        <td class="text-end @(diff916 > 0 ? "text-success" : diff916 < 0 ? "text-danger" : "")">S$@(Math.Abs(diff916).ToString("F2"))</td>
+                                        <td>@Model.HigherRate916</td>
+                                        <td>@Model.LowerRate916</td>
+                                        <td class="text-end">@(Model.PercentageDifference916.HasValue ? Model.PercentageDifference916.Value.ToString("F2") + "%" : "---")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>24K / 999</strong></td>
+                                        <td class="text-end">S$@(mustafa999 > 0 ? mustafa999.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(malabar999 > 0 ? malabar999.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(grt999 > 0 ? grt999.ToString("F2") : "---")</td>
+                                        <td class="text-end">S$@(joyalukkas999 > 0 ? joyalukkas999.ToString("F2") : "---")</td>
+                                        <td class="text-end @(diff999 > 0 ? "text-success" : diff999 < 0 ? "text-danger" : "")">S$@(Math.Abs(diff999).ToString("F2"))</td>
+                                        <td>@Model.HigherRate999</td>
+                                        <td>@Model.LowerRate999</td>
+                                        <td class="text-end">@(Model.PercentageDifference999.HasValue ? Model.PercentageDifference999.Value.ToString("F2") + "%" : "---")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" id="history">
+            <div class="col-12">
+                <div class="content-section">
+                    <div class="section-heading d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div><p class="eyebrow mb-1">RECORDED SHOP OBSERVATIONS</p><h2>Gold price history</h2><p class="text-muted mb-0">Each point comes from an actual saved rate; gaps mean no observation was recorded.</p></div>
+                        <div class="period-control" role="group" aria-label="History period">
+                            <button class="period-button chart-filter active" data-filter="7">7 days</button>
+                            <button class="period-button chart-filter" data-filter="30">1 month</button>
+                            <button class="period-button chart-filter" data-filter="90">3 months</button>
+                            <button class="period-button chart-filter" data-filter="180">6 months</button>
+                            <button class="period-button chart-filter" data-filter="365">1 year</button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-6 mb-3"><h3 class="chart-title">22K / 916</h3><div class="chart-frame"><canvas id="chart916" aria-label="Historical 22K gold prices"></canvas></div></div>
+                        <div class="col-lg-6 mb-3"><h3 class="chart-title">24K / 999</h3><div class="chart-frame"><canvas id="chart999" aria-label="Historical 24K gold prices"></canvas></div></div>
+                    </div>
+                    <p id="historyEmpty" class="empty-state" hidden>No recorded rates in this period. Nothing has been estimated or filled in.</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="content-section mb-4" id="currency-converter">
+            <div class="section-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div><p class="eyebrow mb-1">REFERENCE CONVERSION</p><h2>Currency converter</h2><p class="text-muted mb-0">Rates remain displayed in SGD first; equivalents are estimates.</p></div>
+                <div class="converter-bar"><label for="currencySelect">Convert to</label><select id="currencySelect" class="form-select"><option value="SGD">SGD | Singapore Dollar</option><option value="INR">INR | Indian Rupee</option><option value="USD">USD | US Dollar</option><option value="MYR">MYR | Malaysian Ringgit</option><option value="AED">AED | UAE Dirham</option><option value="GBP">GBP | British Pound</option><option value="EUR">EUR | Euro</option></select></div>
+            </div>
+            <p class="conversion-note mt-2">Converted values are reference conversions using external exchange rates, not shop quotations. <span id="conversionStatus">Fetching reference exchange rate...</span></p>
+            <div class="table-responsive mt-3">
+                <table class="table comparison-table conversion-table">
+                    <thead><tr><th>Shop</th><th>22K / 916 per gram</th><th>24K / 999 per gram</th></tr></thead>
+                    <tbody>
+                        <tr><th>Malabar</th><td data-fx-shop="malabar" data-fx-purity="916">-</td><td data-fx-shop="malabar" data-fx-purity="999">-</td></tr>
+                        <tr><th>Mustafa</th><td data-fx-shop="mustafa" data-fx-purity="916">-</td><td data-fx-shop="mustafa" data-fx-purity="999">-</td></tr>
+                        <tr><th>GRT Jewellers</th><td data-fx-shop="grt" data-fx-purity="916">-</td><td data-fx-shop="grt" data-fx-purity="999">-</td></tr>
+                        <tr><th>Joyalukkas</th><td data-fx-shop="joyalukkas" data-fx-purity="916">-</td><td data-fx-shop="joyalukkas" data-fx-purity="999">-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <aside class="price-disclaimer mb-4">
+            <p class="eyebrow mb-1">INFORMATION AND COMPARISON ONLY</p>
+            <p class="mb-2">Gold prices shown are extracted/referenced from the respective jewellery shop websites and are for information and comparison purposes only. Prices may change frequently and may vary from the actual in-store price due to market movements, timing of updates, product/design differences, workmanship and other applicable charges. Please confirm the final price directly with the respective jewellery shop before making a purchase.</p>
+            <p class="mb-0">Rates are presented as published by each source; GST treatment has not been independently verified or adjusted. The dashboard is not an official quotation. Check the source website and confirm applicable taxes and the final price with the shop.</p>
+        </aside>
+
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+        <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script>
+            var dashboardData = {
+                mustafa916: @(mustafa916 > 0 ? mustafa916.ToString("F2") : "null"),
+                mustafa999: @(mustafa999 > 0 ? mustafa999.ToString("F2") : "null"),
+                malabar916: @(malabar916 > 0 ? malabar916.ToString("F2") : "null"),
+                malabar999: @(malabar999 > 0 ? malabar999.ToString("F2") : "null"),
+                grt916: @(grt916 > 0 ? grt916.ToString("F2") : "null"),
+                grt999: @(grt999 > 0 ? grt999.ToString("F2") : "null"),
+                joyalukkas916: @(joyalukkas916 > 0 ? joyalukkas916.ToString("F2") : "null"),
+                joyalukkas999: @(joyalukkas999 > 0 ? joyalukkas999.ToString("F2") : "null"),
+                sourceNames: { malabar: 'Malabar', mustafa: 'Mustafa', grt: 'GRT Jewellers', joyalukkas: 'Joyalukkas' },
+                historicalRates: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.HistoricalRates)),
+                refreshUrl: '@Url.Action("Refresh", "GoldRate")',
+                historyUrl: '@Url.Action("GetHistory", "GoldRate")'
+            };
+        </script>
+    <script src="@Url.Content("~/Scripts/gold-dashboard.js?v=20260927-4")"></script>
+</body>
+</html>
+>>>>>>> dc43eff4eb3447393e91752b993c937bed574851
