@@ -1,0 +1,21 @@
+# Visual Studio and editor state
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Restored NuGet package cache
+packages/
+
+# Local copies and runtime output
+Backup/
+Logs/
+App_Data/GoldRates/*.xlsx
+
+# User-specific files
+*.user
+*.sln.docstates
