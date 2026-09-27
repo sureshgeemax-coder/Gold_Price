@@ -402,3 +402,17 @@
 2026-09-27 15:34:15.338 +08:00 [INF] Appended 1 records to Excel.
 2026-09-27 15:34:15.628 +08:00 [INF] Refresh completed. Mustafa 916=173.20, 999=188.10, Malabar 916=170.00, 999=186.50, GRT 916=170.00, 999=184.70, Joyalukkas 916=170, 999=185.6
 2026-09-27 15:34:15.703 +08:00 [INF] Excel file exists at C:\Project\GoldPriceDashboard\App_Data\GoldRates\GoldRates.xlsx.
+2026-09-27 16:19:33.413 +08:00 [INF] Excel file exists at C:\Project\GoldPriceDashboard\App_Data\GoldRates\GoldRates.xlsx.
+2026-09-27 16:19:33.414 +08:00 [INF] Gold rate refresh started
+2026-09-27 16:19:33.414 +08:00 [INF] Fetching Mustafa gold rates from https://mustafajewellery.com/
+2026-09-27 16:19:33.415 +08:00 [INF] Fetching Malabar gold rates from https://www.malabargoldanddiamonds.com/ae/stores/singapore
+2026-09-27 16:19:33.415 +08:00 [INF] Fetching GRT gold rates from https://www.grtjewels.com/asia/
+2026-09-27 16:19:33.415 +08:00 [INF] Fetching Joyalukkas gold rates from https://www.joyalukkas.com/graphql
+2026-09-27 16:19:33.523 +08:00 [INF] Mustafa 916 = 173.20, 999 = 188.10
+2026-09-27 16:19:34.144 +08:00 [INF] Malabar 916 = 170.00, 999 = 186.50
+2026-09-27 16:19:34.283 +08:00 [INF] Appended 1 records to Excel.
+2026-09-27 16:19:34.410 +08:00 [INF] Appended 1 records to Excel.
+2026-09-27 16:19:34.725 +08:00 [INF] Appended 1 records to Excel.
+2026-09-27 16:19:34.951 +08:00 [INF] Appended 1 records to Excel.
+2026-09-27 16:19:35.819 +08:00 [INF] Refresh completed. Mustafa 916=173.20, 999=188.10, Malabar 916=170.00, 999=186.50, GRT 916=170.00, 999=184.70, Joyalukkas 916=170, 999=185.6
+2026-09-27 16:19:35.982 +08:00 [INF] Excel file exists at C:\Project\GoldPriceDashboard\App_Data\GoldRates\GoldRates.xlsx.
