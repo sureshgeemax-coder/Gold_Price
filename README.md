@@ -46,6 +46,8 @@ Edit `Web.config` `<appSettings>` to configure URLs and refresh intervals:
 4. Press F5 to run with the debugger or Ctrl+F5 to run without it.
 5. If the browser does not open automatically, browse to `http://localhost:57103/` or `http://localhost:57103/GoldRate/Index` while IIS Express is running.
 
+The Web API routes are registered separately from MVC routes at application startup; `/api/goldrates` and `/api/goldrates/history` are available alongside the dashboard.
+
 The dashboard will:
 - Fetch latest gold rates from all four sources
 - Display indicative 22K/916 and 24K/999 rates in SGD/gram with source links and update times

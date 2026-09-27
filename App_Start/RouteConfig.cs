@@ -10,8 +10,6 @@ namespace GoldPriceDashboard
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapRoute("GoldRatesApiHistory", "api/goldrates/history", new { controller = "GoldRateApi", action = "GetHistory" });
-            routes.MapRoute("GoldRatesApi", "api/goldrates", new { controller = "GoldRateApi", action = "GetGoldRates" });
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

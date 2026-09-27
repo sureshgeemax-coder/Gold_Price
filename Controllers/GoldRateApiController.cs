@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
 using System.Threading.Tasks;
 using GoldPriceDashboard.Models;
 using GoldPriceDashboard.Repository;
 using GoldPriceDashboard.Services;
 using Serilog;
-using System.Web.Mvc;
 
 namespace GoldPriceDashboard.Controllers
 {
@@ -14,7 +12,6 @@ namespace GoldPriceDashboard.Controllers
     {
         private static IGoldRateService _goldRateService;
         private static IExcelGoldRateRepository _excelRepository;
-        private static readonly object _lock = new object();
         private readonly ILogger _logger;
 
         static GoldRateApiController()
